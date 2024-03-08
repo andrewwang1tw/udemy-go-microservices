@@ -1,0 +1,11 @@
+#####################################################################################################
+# 86. Adding Caddy to the mix as a Proxy to our front endand the borker
+#####################################################################################################
+
+#
+cd ../project
+docker build -f caddy.dockerfile -t andrewwang1tw/micro-caddy:1.0.0 .  
+docker push andrewwang1tw/micro-caddy:1.0.0
+
+
+# https://www.thewindowsclub.com/hosts-file-in-windows

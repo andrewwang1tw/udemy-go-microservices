@@ -1,0 +1,89 @@
+################################################################################################
+# 77. build, tag and push docker image
+################################################################################################
+#
+docker login
+
+#
+cd ../front-end
+docker build -f front-end.dockerfile -t andrewwang1tw/front-end:1.0.0 .  
+docker push andrewwang1tw/front-end:1.0.0
+
+# broker - build and tag the docker image
+cd ../broker-service
+docker build -f broker-service.dockerfile -t andrewwang1tw/broker-service:1.0.0 .
+docker push andrewwang1tw/broker-service:1.0.0
+
+
+# authentication - 
+cd ../authentication-service
+docker build -f authentication-service.dockerfile -t andrewwang1tw/authentication-service:1.0.0 .
+docker push andrewwang1tw/authentication-service:1.0.0
+
+
+# logger -build and tag the docker image
+cd ../logger-service
+docker build -f logger-service.dockerfile -t andrewwang1tw/logger-service:1.0.0 .
+docker push andrewwang1tw/logger-service:1.0.0
+
+
+# mail - build and tag the docker image
+cd ../mail-service
+docker build -f mail-service.dockerfile -t andrewwang1tw/mail-service:1.0.1 .
+docker push andrewwang1tw/mail-service:1.0.1
+
+
+# listener - build and tag the docker image
+cd ../listener-service
+docker build -f listener-service.dockerfile -t andrewwang1tw/listener-service:1.0.0 .
+docker push andrewwang1tw/listener-service:1.0.0
+
+
+#####################################################################################################
+# 78. Initializing and starting Docker swarm
+#####################################################################################################
+cd ../project
+
+# swarm init
+docker swarm init
+
+    # if add worker
+    docker swarm join-token worker
+
+    # if add manager
+    docker swarm join-token manager
+
+# deploy
+docker stack deploy -c swarm.yml myapp
+
+docker service ls
+
+# leave swarm
+docker swarm leave --force
+
+#####################################################################################################
+# 80. Scaling services
+#####################################################################################################
+cd ../project
+
+docker service scale myapp_listener-service=3
+
+docker service ls
+
+#####################################################################################################
+# 81. Update services
+#####################################################################################################
+
+docker service scale myapp_mail-service=2
+docker service update --image andrewwang1tw/mail-service:1.0.4 myapp_mail-service 
+
+
+#####################################################################################################
+# 82. Stopping Docker Swarm
+#####################################################################################################
+
+docker service scale myapp_mail-service=0
+
+docker stack rm myapp
+
+docker swarm leave --force

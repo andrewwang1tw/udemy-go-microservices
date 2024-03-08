@@ -1,0 +1,9 @@
+#
+go mod init listener
+
+# MQ
+go get github.com/rabbitmq/amqp091-go
+
+
+#
+docker-compose up -d
